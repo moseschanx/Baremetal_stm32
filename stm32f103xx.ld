@@ -1,0 +1,11 @@
+ENTRY(Reset_handler)
+
+MEMORY
+{
+
+	FLASH(rx):ORIGIN=,LENGTH=
+	SRAM1(rwx):ORIGIN=,LENGTH=
+	SRAM2(rwx):ORIGIN=,LENGTH=
+
+
+}
