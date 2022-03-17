@@ -3,14 +3,15 @@ OBJDUMP = arm-none-eabi-objdump
 CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 
 LDFLAGS = -nostdlib -T stm32f103xx.ld
 
-STLINK_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
-CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg 
 
 # OS dependence Variables 
 ifeq ($(OS),Windows_NT) 
 RM = del /Q /F 
 else
 RM = rm -rvf
+
+STLINK_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
+CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg 
 endif
 
 all : final.elf
