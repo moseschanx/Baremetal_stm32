@@ -16,10 +16,8 @@ endif
 all : main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf final.map
        
 final.elf : main.o  stm32f103xx_startup.o 
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) -Wl,-Map=final.map -o $@ $^
 
-final.map : main.o  stm32f103xx_startup.o 
-	$(CC) $(LDFLAGS) -Wl,-Map=$@  $^
 
 main.o : main.c
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
