@@ -7,9 +7,14 @@ LDFLAGS = -nostdlib -T stm32f103xx.ld
 # OS dependence Variables 
 ifeq ($(OS),Windows_NT) 
 RM = del /Q /F 
+
+OPENOCD = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\bin\openocd.exe"
+STLINK_CFG = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\scripts\interface\stlink.cfg"
+CHIP_CFG = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\scripts\target\stm32f1x.cfg"
 else
 RM = rm -rvf
 
+OPENOCD = openocd
 STLINK_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
 CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg 
 endif
@@ -64,7 +69,7 @@ clean :
 	
 
 load:
-	openocd -f  $(STLINK_CFG) \
+	$(OPENOCD) -f  $(STLINK_CFG) \
 	       	-f  $(CHIP_CFG)
 
 
