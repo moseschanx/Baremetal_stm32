@@ -3,6 +3,10 @@ OBJDUMP = arm-none-eabi-objdump
 CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 
 LDFLAGS = -nostdlib -T stm32f103xx.ld
 
+OPENOCD_DEBUG_CMDS = 
+OPENOCD_DEBUG_CMDS += -c "reset halt"
+OPENOCD_DEBUG_CMDS += -c "flash write_image erase final.elf"
+OPENOCD_DEBUG_CMDS += -c "shutdown"
 
 # OS dependence Variables 
 ifeq ($(OS),Windows_NT) 
@@ -68,9 +72,13 @@ clean :
 	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map
 	
 
-load:
+load :
 	$(OPENOCD) -f  $(STLINK_CFG) \
 	       	-f  $(CHIP_CFG)
 
+flash :
+	$(OPENOCD) -f  $(STLINK_CFG) \
+	       	-f  $(CHIP_CFG) \
+			-c init $(OPENOCD_DEBUG_CMDS)
 
 
