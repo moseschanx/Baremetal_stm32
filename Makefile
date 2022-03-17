@@ -1,13 +1,22 @@
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
-CCFLAGS = -march=armv7-m -mthumb -O0 -std=gnu11 
+CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 
 LDFLAGS = -nostdlib -T stm32f103xx.ld
 
-all : main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf 
+# OS dependence Variables 
+ifeq ($(OS),Windows_NT) 
+RM = del /Q /F 
+else
+RM = rm -rvf
+endif
+
+all : main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf final.map
        
 final.elf : main.o  stm32f103xx_startup.o 
-		
 	$(CC) $(LDFLAGS) -o $@ $^
+
+final.map : main.o  stm32f103xx_startup.o 
+	$(CC) $(LDFLAGS) -Wl,-Map=$@  $^
 
 main.o : main.c
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
@@ -47,7 +56,7 @@ stm32f103xx_debug : stm32f103xx_layout stm32f103xx_disa stm32f103xx_bin
 
 
 clean :
-	rm -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf
+	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map
 	
 
 
