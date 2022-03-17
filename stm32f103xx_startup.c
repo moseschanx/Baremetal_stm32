@@ -7,6 +7,13 @@
 
 extern int main(void);
 
+extern uint32_t _sdata;
+extern uint32_t _edata;
+extern uint32_t _stext;
+extern uint32_t _etext;
+extern uint32_t _sbss;
+extern uint32_t _ebss;
+
 // Vector table for other STM32F10xxx devices
 void Reset_handler(void);
 
@@ -166,8 +173,21 @@ void Default_handler(void){
 
 }
 
-
 void Reset_handler(void){
+
+	//copy .data section to SRAM
+	uint32_t size = &_edata - &_sdata;
+	uint8_t* pDst = (uint8_t*)&_sdata;  // SRAM
+	uint8_t* pSrc = (uint8_t*)&_etext;  // FALSH  // End of the .text section is equavalent to start of the .data section , see in linker script 
+	
+	for(uint32_t i = 0 ; i<size ; ++i)
+		*pDst++ = *pSrc++;
+
+	//initialize the .bss section to zero in SARM
+	size = &_ebss - &_sbss;
+	pDst = (uint8_t*)&_sdata;  // SRAM
+	for(uint32_t i = 0 ; i<size ; ++i)
+		*pDst++ = 0;
 
 	main();
 
