@@ -3,7 +3,7 @@
 #define SRAM_START	 0x20000000U
 #define SRAM_SIZE 	 (20U * 1024U)
 #define SRAM_END  	 (SRAM_START + SRAM_SIZE)
-#define STACK_START	 SRAM_END 
+#define STACK_START	 SRAM_START + 0x400U
 
 extern int main(void);
 
@@ -88,7 +88,7 @@ void DMA2_Channel3_handler(void)__attribute__((weak,alias("Default_handler")));
 void DMA2_Channel4_5_handler(void)__attribute__((weak,alias("Default_handler")));
 
 uint32_t vector_table[] __attribute__((section(".isr_vector")))= {
-	STACK_START,
+	(uint32_t)STACK_START,
 	(uint32_t)&Reset_handler,
 	(uint32_t)&NMI_handler,
 	(uint32_t)&HardFault_handler,
@@ -176,7 +176,7 @@ void Default_handler(void){
 void Reset_handler(void){
 
 	//copy .data section to SRAM
-	uint32_t size = &_edata - &_sdata;
+	uint32_t size = (uint32_t)&_edata - (uint32_t)&_sdata;
 	uint8_t* pDst = (uint8_t*)&_sdata;  // SRAM
 	uint8_t* pSrc = (uint8_t*)&_etext;  // FALSH  // End of the .text section is equavalent to start of the .data section , see in linker script 
 	
@@ -184,7 +184,7 @@ void Reset_handler(void){
 		*pDst++ = *pSrc++;
 
 	//initialize the .bss section to zero in SARM
-	size = &_ebss - &_sbss;
+	size = (uint32_t)&_ebss - (uint32_t)&_sbss;
 	pDst = (uint8_t*)&_sdata;  // SRAM
 	for(uint32_t i = 0 ; i<size ; ++i)
 		*pDst++ = 0;
