@@ -13,7 +13,9 @@ else
 RM = rm -rvf
 endif
 
-all : main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf final.map
+all : final.elf
+#	main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf final.map
+
        
 final.elf : main.o  stm32f103xx_startup.o 
 	$(CC) $(LDFLAGS) -Wl,-Map=final.map -o $@ $^
