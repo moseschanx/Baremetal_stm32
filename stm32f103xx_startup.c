@@ -6,6 +6,7 @@
 #define STACK_START	 SRAM_START + 0x400U
 
 extern int main(void);
+extern void SystemInit (void);
 
 extern uint32_t _sdata;
 extern uint32_t _edata;
@@ -191,6 +192,7 @@ void Reset_handler(void){
 	for(uint32_t i = 0 ; i<size ; ++i)
 		*pDst++ = 0;
 
+	SystemInit();
 	main();
 
 }
