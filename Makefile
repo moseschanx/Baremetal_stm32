@@ -72,7 +72,7 @@ clean :
 	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map
 	
 
-load :
+loadserver :
 	$(OPENOCD) -f  $(STLINK_CFG) \
 	       	-f  $(CHIP_CFG)
 
