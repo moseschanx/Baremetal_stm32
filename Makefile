@@ -27,18 +27,19 @@ CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg
 STD_PERIPH_DIR = /home/moses/Downloads/STM32F10x_StdPeriph_Lib_V3.6.0
 endif
 
-vpath %.c $(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/
+vpath %.c $(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/ : src 
 
 INCLUDES = \
 			-I$(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/CoreSupport \
 			-I$(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
+			-Iinc \
 
 
 all : final.elf
 #	main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf final.map
 
        
-final.elf : main.o  stm32f103xx_startup.o system_stm32f10x.o
+final.elf : main.o  stm32f103xx_startup.o system_stm32f10x.o user_stm32f10x.o
 	$(CC) $(LDFLAGS) -Wl,-Map=final.map -o $@ $^
 
 
@@ -49,11 +50,29 @@ main.s : main.c
 
 stm32f103xx_startup.o : stm32f103xx_startup.c
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
-stm32f103xx_startup.s : stm32f103xx_startup.c
-	$(CC) $(CCFLAGS) -S $^ -o $@ 
 
 system_stm32f10x.o : system_stm32f10x.c  
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
+
+user_stm32f10x.o : user_stm32f10x.c
+	$(CC) $(CCFLAGS) -c $^ -o $@ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+stm32f103xx_startup.s : stm32f103xx_startup.c
+	$(CC) $(CCFLAGS) -S $^ -o $@ 
+
 
 main_layout : main.o
 	$(OBJDUMP) -h $^ > $@
