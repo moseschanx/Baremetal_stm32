@@ -175,7 +175,7 @@ void Default_handler(void){
 
 void Reset_handler(void){
 
-	
+	//Initialize .data section 	
 	//copy .data section to SRAM
 	uint32_t size = (uint32_t)&_edata - (uint32_t)&_sdata;
 	uint8_t* pDst = (uint8_t*)&_sdata;  // SRAM
@@ -184,6 +184,7 @@ void Reset_handler(void){
 	for(uint32_t i = 0 ; i<size ; ++i)
 		*pDst++ = *pSrc++;
 
+	//Initialize .bss section
 	//initialize the .bss section to zero in SARM
 	size = (uint32_t)&_ebss - (uint32_t)&_sbss;
 	pDst = (uint8_t*)&_sdata;  // SRAM
