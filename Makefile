@@ -24,7 +24,7 @@ OPENOCD = openocd
 STLINK_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
 CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg 
 
-STD_PERIPH_DIR = 
+STD_PERIPH_DIR = /home/moses/Downloads/STM32F10x_StdPeriph_Lib_V3.6.0
 endif
 
 vpath %.c $(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/
