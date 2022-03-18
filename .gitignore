@@ -1,0 +1,1 @@
+ *.o *.s *_debug *_disa *_bin *_layout *.elf *.map
