@@ -1,5 +1,6 @@
 #include <stdint.h>
-
+#include "stm32f10x.h"
+#include "user_stm32f10x.h"
 
 uint32_t global_counter = 4;
 
