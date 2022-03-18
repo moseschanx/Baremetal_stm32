@@ -1,5 +1,6 @@
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
+# -S for .s , -h for mem layout , -d for disassembly , -s for binary
 CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 $(INCLUDES)
 LDFLAGS = -nostdlib -T stm32f103xx.ld
 
@@ -59,47 +60,6 @@ user_stm32f10x.o : user_stm32f10x.c
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-stm32f103xx_startup.s : stm32f103xx_startup.c
-	$(CC) $(CCFLAGS) -S $^ -o $@ 
-
-
-main_layout : main.o
-	$(OBJDUMP) -h $^ > $@
-
-main_disa : main.o
-	$(OBJDUMP) -d $^ > $@
-
-main_bin : main.o
-	$(OBJDUMP) -s $^ > $@
-
-main_debug : main_layout main_disa main_bin
-	
-
-
-stm32f103xx_layout : stm32f103xx_startup.o
-	$(OBJDUMP) -h $^ > $@
-
-stm32f103xx_disa : stm32f103xx_startup.o
-	$(OBJDUMP) -d $^ > $@
-
-stm32f103xx_bin : stm32f103xx_startup.o
-	$(OBJDUMP) -s $^ > $@
-
-stm32f103xx_debug : stm32f103xx_layout stm32f103xx_disa stm32f103xx_bin 
-
-
-
 clean :
 	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map
 	
@@ -112,5 +72,3 @@ flash :
 	$(OPENOCD) -f  $(STLINK_CFG) \
 	       	-f  $(CHIP_CFG) \
 			-c init $(OPENOCD_DEBUG_CMDS)
-
-
