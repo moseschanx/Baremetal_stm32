@@ -1,7 +1,7 @@
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
 # -S for .s , -h for mem layout , -d for disassembly , -s for binary
-CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 $(INCLUDES)
+CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 -g $(INCLUDES)
 LDFLAGS = -nostdlib -T stm32f103xx.ld
 
 OPENOCD_DEBUG_CMDS = 
@@ -13,6 +13,7 @@ OPENOCD_DEBUG_CMDS += -c "shutdown"
 ifeq ($(OS),Windows_NT) 
 RM = del /Q /F 
 
+GDB_CMD = 
 OPENOCD = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\bin\openocd.exe"
 STLINK_CFG = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\scripts\interface\stlink.cfg"
 CHIP_CFG = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\scripts\target\stm32f1x.cfg"
@@ -21,6 +22,7 @@ STD_PERIPH_DIR = C:\Users\moses\Desktop\STM32F10x_StdPeriph_Lib_V3.6.0
 else
 RM = rm -rvf
 
+GDB_CMD = arm-none-eabi-gdb
 OPENOCD = openocd
 STLINK_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
 CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg 
@@ -66,9 +68,24 @@ clean :
 
 loadserver :
 	$(OPENOCD) -f  $(STLINK_CFG) \
-	       	-f  $(CHIP_CFG)
+	       	-f  $(CHIP_CFG) 
 
 flash :
 	$(OPENOCD) -f  $(STLINK_CFG) \
 	       	-f  $(CHIP_CFG) \
 			-c init $(OPENOCD_DEBUG_CMDS)
+
+gdbflash : loadserver
+	$(GDB_CMD) \
+		-ex "target remote localhost:3333" \
+		-ex "monitor reset halt" \
+		-ex "monitor flash write_image erase ./final.elf" \
+		-ex "detach" \
+		-ex "quit"
+
+gdbdbg : loadserver
+	$(GDB_CMD) \
+		-ex "file ./final.elf" \
+		-ex "target remote localhost:3333" \
+		-ex "monitor reset halt" \
+
