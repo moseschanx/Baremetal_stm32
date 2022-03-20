@@ -64,7 +64,7 @@ user_stm32f10x.o : user_stm32f10x.c
 
 
 clean :
-	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map
+	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map *.swp
 	
 
 loadserver :
@@ -89,4 +89,7 @@ gdbdbg : loadserver
 		-ex "file ./final.elf" \
 		-ex "target remote localhost:3333" \
 		-ex "monitor reset halt" \
+		-ex "source ./svd_tool/gdb-svd.py" \
+		-ex "svd ./svd_tool/STM32F103xx.svd" \
+
 
