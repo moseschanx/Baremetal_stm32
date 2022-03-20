@@ -23,7 +23,7 @@ STD_PERIPH_DIR = C:\Users\moses\Desktop\STM32F10x_StdPeriph_Lib_V3.6.0
 else
 RM = rm -rvf
 
-GDB_CMD = arm-none-eabi-gdb
+GDB_CMD = arm-none-eabi-gdb-py
 OPENOCD = openocd
 STLINK_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
 CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg 
