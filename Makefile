@@ -13,7 +13,8 @@ OPENOCD_DEBUG_CMDS += -c "shutdown"
 ifeq ($(OS),Windows_NT) 
 RM = del /Q /F 
 
-GDB_CMD = 
+START = start ""
+GDB_CMD = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\bin\arm-none-eabi-gdb.exe"
 OPENOCD = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\bin\openocd.exe"
 STLINK_CFG = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\scripts\interface\stlink.cfg"
 CHIP_CFG = "C:\Program Files (x86)\GNU Arm Embedded Toolchain\xpack-openocd-0.11.0-3\scripts\target\stm32f1x.cfg"
@@ -67,8 +68,8 @@ clean :
 	
 
 loadserver :
-	$(OPENOCD) -f  $(STLINK_CFG) \
-	       	-f  $(CHIP_CFG) 
+	$(START) $(OPENOCD) -f  $(STLINK_CFG) \
+	       	-f  $(CHIP_CFG) &
 
 flash :
 	$(OPENOCD) -f  $(STLINK_CFG) \
@@ -76,7 +77,7 @@ flash :
 			-c init $(OPENOCD_DEBUG_CMDS)
 
 gdbflash : loadserver
-	$(GDB_CMD) \
+	$(START) $(GDB_CMD) \
 		-ex "target remote localhost:3333" \
 		-ex "monitor reset halt" \
 		-ex "monitor flash write_image erase ./final.elf" \
@@ -84,7 +85,7 @@ gdbflash : loadserver
 		-ex "quit"
 
 gdbdbg : loadserver
-	$(GDB_CMD) \
+	$(START) $(GDB_CMD) \
 		-ex "file ./final.elf" \
 		-ex "target remote localhost:3333" \
 		-ex "monitor reset halt" \
