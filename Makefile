@@ -23,6 +23,7 @@ STD_PERIPH_DIR = C:\Users\moses\Desktop\STM32F10x_StdPeriph_Lib_V3.6.0
 else
 RM = rm -rvf
 
+MSG_SUPRESS = > ./server.log 2>&1 
 GDB_CMD = arm-none-eabi-gdb-py
 OPENOCD = openocd
 STLINK_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
@@ -64,12 +65,12 @@ user_stm32f10x.o : user_stm32f10x.c
 
 
 clean :
-	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map *.swp
+	$(RM) -rvf *.o *.s *_debug *_disa *_bin *_layout *.elf *.map *.swp *.log
 	
 
 loadserver :
 	$(START) $(OPENOCD) -f  $(STLINK_CFG) \
-	       	-f  $(CHIP_CFG) &
+	       	-f  $(CHIP_CFG) $(MSG_SUPRESS) &
 
 flash :
 	$(OPENOCD) -f  $(STLINK_CFG) \
