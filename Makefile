@@ -41,10 +41,10 @@ INCLUDES = \
 			-I$(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/CoreSupport \
 			-I$(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
 			-I$(STD_PERIPH_DIR)/Libraries/STM32F10x_StdPeriph_Driver/inc \
-#			-I$(STD_PERIPH_DIR)/Project/STM32F10x_StdPeriph_Template \
 			-Iinc \
 
 MACROS = -D 'assert_param(expr)=((void)0)' \
+		 -D STM32F10X_LD 
 
 
 
