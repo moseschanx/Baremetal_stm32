@@ -1,7 +1,7 @@
 CC = arm-none-eabi-gcc
 OBJDUMP = arm-none-eabi-objdump
 # -S for .s , -h for mem layout , -d for disassembly , -s for binary
-CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 -g $(INCLUDES)
+CCFLAGS = -march=armv7-m -mthumb -Wall -O0 -std=gnu11 -g $(INCLUDES) $(MACROS)
 LDFLAGS = -nostdlib -T stm32f103xx.ld
 
 OPENOCD_DEBUG_CMDS = 
@@ -32,19 +32,27 @@ CHIP_CFG = /usr/local/share/openocd/scripts/target/stm32f1x.cfg
 STD_PERIPH_DIR = /home/moses/code/STM32F10x_StdPeriph_Lib_V3.6.0
 endif
 
-vpath %.c $(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/ : src 
+vpath %.c $(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/ : src \
+	: $(STD_PERIPH_DIR)/Libraries/STM32F10x_StdPeriph_Driver/src \
+	: $(STD_PERIPH_DIR)/Project/STM32F10x_StdPeriph_Template \
+
 
 INCLUDES = \
 			-I$(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/CoreSupport \
 			-I$(STD_PERIPH_DIR)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x \
+			-I$(STD_PERIPH_DIR)/Libraries/STM32F10x_StdPeriph_Driver/inc \
+#			-I$(STD_PERIPH_DIR)/Project/STM32F10x_StdPeriph_Template \
 			-Iinc \
+
+MACROS = -D 'assert_param(expr)=((void)0)' \
+
 
 
 all : final.elf
 #	main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf final.map
 
        
-final.elf : main.o  stm32f103xx_startup.o system_stm32f10x.o 
+final.elf : main.o  stm32f103xx_startup.o system_stm32f10x.o stm32f10x_rcc.o stm32f10x_gpio.o
 	$(CC) $(LDFLAGS) -Wl,-Map=final.map -o $@ $^
 
 
@@ -57,6 +65,12 @@ stm32f103xx_startup.o : stm32f103xx_startup.c
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
 
 system_stm32f10x.o : system_stm32f10x.c  
+	$(CC) $(CCFLAGS) -c $^ -o $@ 
+
+stm32f10x_gpio.o : stm32f10x_gpio.c
+	$(CC) $(CCFLAGS) -c $^ -o $@ 
+
+stm32f10x_rcc.o : stm32f10x_rcc.c
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
 
 
