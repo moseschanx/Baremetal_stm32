@@ -52,7 +52,7 @@ all : final.elf
 #	main.s stm32f103xx_startup.s main_debug stm32f103xx_debug final.elf final.map
 
        
-final.elf : main.o  stm32f103xx_startup.o system_stm32f10x.o stm32f10x_rcc.o stm32f10x_gpio.o
+final.elf : main.o  stm32f103xx_startup.o system_stm32f10x.o stm32f10x_it.o stm32f10x_rcc.o stm32f10x_gpio.o 
 	$(CC) $(LDFLAGS) -Wl,-Map=final.map -o $@ $^
 
 
@@ -65,6 +65,9 @@ stm32f103xx_startup.o : stm32f103xx_startup.c
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
 
 system_stm32f10x.o : system_stm32f10x.c  
+	$(CC) $(CCFLAGS) -c $^ -o $@ 
+
+stm32f10x_it.o :  stm32f10x_it.c
 	$(CC) $(CCFLAGS) -c $^ -o $@ 
 
 stm32f10x_gpio.o : stm32f10x_gpio.c
