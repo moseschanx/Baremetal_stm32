@@ -5,37 +5,28 @@
 #include "stm32f10x_it.h"
 #include "stm32f10x_gpio.h"
 
-GPIO_InitTypeDef* PC13_LED;
-
-void LED_TOGGLE(){
-	
-	if(GPIO_ReadOutputDataBit(GPIOC , 13))
-		GPIO_ResetBits(GPIOC , 13);
-		
-	else
-		GPIO_SetBits(GPIOC , 13);
+GPIO_InitTypeDef LED;
 
 
-}
-
-
-static __IO uint32_t TimingDelay;
+uint32_t global_var = 0xFF;
 
 void Delay(__IO uint32_t nTime);
 
 int main(){
 
-	PC13_LED->GPIO_Pin = 13; 
-	PC13_LED->GPIO_Speed = GPIO_Speed_2MHz;
-	PC13_LED->GPIO_Mode = GPIO_Mode_Out_OD;
+	uint32_t *APB2_CLK_ENA =(uint32_t*) 0x40021018; 
+	*APB2_CLK_ENA |=(uint32_t) (1<<4);
 
-	GPIO_Init(GPIOC , PC13_LED);
-
-
-	LED_TOGGLE();
+	uint32_t *GPIOC_CRH =(uint32_t*) 0x40011004; 
+	*GPIOC_CRH |= (uint32_t)(1<<20);
+	*GPIOC_CRH |=(uint32_t) (0<<22);
 
 
-	return 0;
+	uint32_t *GPIOC_ODR =(uint32_t*) 0x400110C;
+	*GPIOC_ODR &=(uint32_t) (1<<13);
+
+	while(1);
+
 }
 
 
@@ -44,6 +35,8 @@ int main(){
   * @param  nTime: specifies the delay time length, in milliseconds.
   * @retval None
   */
+static __IO uint32_t TimingDelay;
+
 void Delay(__IO uint32_t nTime)
 { 
   TimingDelay = nTime;
