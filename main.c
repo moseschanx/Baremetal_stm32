@@ -31,11 +31,9 @@ int main(){
 
 	GPIO_Init(GPIOC , PC13_LED);
 
-	while(1){
 
 	LED_TOGGLE();
 
-	}
 
 	return 0;
 }
