@@ -3,6 +3,7 @@
 #include "stm32f10x.h"
 
 #include "stm32f10x_it.h"
+#include "stm32f10x_rcc.h"
 #include "stm32f10x_gpio.h"
 
 GPIO_InitTypeDef LED;
@@ -12,7 +13,7 @@ uint32_t global_var = 0xFF;
 
 void Delay(__IO uint32_t nTime);
 
-int main(){
+int Bare_testing(){
 
 	uint32_t *APB2_CLK_ENA =(uint32_t*) 0x40021018; 
 	*APB2_CLK_ENA |=(uint32_t) (1<<4);
@@ -27,6 +28,39 @@ int main(){
 
 	while(1);
 
+}
+
+void TOGGLE(){
+
+  if(GPIO_ReadOutputDataBit(GPIOC , 13))
+    GPIO_ResetBits(GPIOC , GPIO_Pin_13);
+  else
+    GPIO_SetBits(GPIOC , GPIO_Pin_13);
+
+    
+
+}
+
+int main(){
+
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
+
+    GPIO_InitTypeDef LED;
+    LED.GPIO_Mode = GPIO_Mode_Out_PP;
+    LED.GPIO_Pin = GPIO_Pin_13;
+    LED.GPIO_Speed = GPIO_Speed_10MHz;
+
+    GPIO_Init(GPIOC , &LED);
+    GPIO_ResetBits(GPIOC , GPIO_Pin_13);
+
+
+  while(1){
+
+    Delay(1000);
+    TOGGLE();
+  };
+
+ 
 }
 
 
