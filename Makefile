@@ -44,7 +44,7 @@ INCLUDES = \
 			-Iinc \
 
 MACROS = -D 'assert_param(expr)=((void)0)' \
-		 -D STM32F10X_LD 
+		 -D STM32F10X_MD
 
 
 
