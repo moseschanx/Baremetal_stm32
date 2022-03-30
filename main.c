@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "stm32f10x.h"
 
@@ -30,17 +31,6 @@ int Bare_testing(){
 
 }
 
-void TOGGLE(){
-
-  if(GPIO_ReadOutputDataBit(GPIOC , 13))
-    GPIO_ResetBits(GPIOC , GPIO_Pin_13);
-  else
-    GPIO_SetBits(GPIOC , GPIO_Pin_13);
-
-    
-
-}
-
 int main(){
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
@@ -53,11 +43,15 @@ int main(){
     GPIO_Init(GPIOC , &LED);
     GPIO_ResetBits(GPIOC , GPIO_Pin_13);
 
+    if(SysTick_Config(SystemCoreClock / 1000))
+    	while(1);
 
   while(1){
 
-    Delay(1000);
-    TOGGLE();
+    Delay(1);
+    GPIO_SetBits(GPIOC , GPIO_Pin_13);
+    Delay(1);
+    GPIO_ResetBits(GPIOC , GPIO_Pin_13);
   };
 
  
